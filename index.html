@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Queue Management & Token Allocation System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+     PROTOTYPE ITERATOR ROUTER (SIMULATES ROUTING MECHANISMS VIA CSS STATES)
+     ========================================================================== -->
+  <!-- This acts as a tab section. even if you login as user u can see admin's part if you click on the respective tabs so i have kept it as a reference
+     <nav class="proto-nav">
+    <button onclick="switchView('view-gateway')" id="btn-view-gateway" class="active">1. Landing Gateway</button>
+    <button onclick="switchView('view-user-login')">2. User Login View</button>
+    <button onclick="switchView('view-admin-login')">3. Admin Login View</button>
+    <button onclick="switchView('view-token-gen')">4. Token Generation Module</button>
+    <button onclick="switchView('view-realtime-user')">5. Live Progress (User)</button>
+    <button onclick="switchView('view-realtime-admin')">6. Live Control Panel (Admin)</button>
+    <button onclick="switchView('view-db-records')">7. Database Service Logs</button>
+  </nav>-->
+
+  <!-- ==========================================================================
+     VIEW 1: LANDING GATEWAY INTERFACE
+     ========================================================================== -->
+  <section id="view-gateway" class="view-section active-view">
+    <div class="gateway-container card">
+      <h2>Smart Queue System</h2>
+      <p>Welcome. Please choose your portal interface view node configuration to proceed.</p>
+      <div class="gateway-buttons">
+        <button class="btn" onclick="switchView('view-user-login')">User Login</button>
+        <button class="btn btn-secondary" onclick="switchView('view-admin-login')">Admin Login</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     VIEW 2: USER LOGIN INTERFACE (MOBILE RESPONSIVE STRUCTURE)
+     ========================================================================== -->
+  <section id="view-user-login" class="view-section">
+    <div class="login-box card">
+      <div class="login-header">
+        <h3>Customer Login</h3>
+        <p>Access your current live status profile</p>
+      </div>
+      
+      <form onsubmit="event.preventDefault(); switchView('view-realtime-user');">
+        <label for="user-id">Token Number, Phone, or Email</label>
+        <input type="text" id="user-id" placeholder="e.g., T-105 or 9876543210" required>
+        
+        <label for="otp">Enter Password / OTP</label>
+        <input type="password" id="otp" placeholder="Enter security verification credentials" required>
+        
+        <div class="qr-placeholder">
+          <span class="qr-icon">📷</span>
+          <span>Scan Ticket QR Code Interface</span>
+        </div>
+
+        <button type="submit" class="btn">View My Queue Status</button>
+      </form>
+      
+      <div class="form-footer-links">
+        <a href="#" onclick="switchView('view-token-gen')">Get a New Token</a>
+        <a href="#">Need Assistance?</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     VIEW 3: ADMIN LOGIN INTERFACE (SECURE ENTERPRISE SPECIFICATION)
+     ========================================================================== -->
+  <section id="view-admin-login" class="view-section">
+    <div class="login-box card">
+      <div class="login-header">
+        <h3>Staff Authentication Portal</h3>
+        <p>Enterprise Node Security Gateway</p>
+      </div>
+      
+      <form onsubmit="event.preventDefault(); switchView('view-realtime-admin');">
+        <label for="admin-email">Staff Corporate Email</label>
+        <input type="email" id="admin-email" placeholder="name@company.com" required>
+        
+        <label for="admin-password">Secure Security Password</label>
+        <input type="password" id="admin-password" placeholder="••••••••" required>
+        
+        <label for="counter-select">Assign to Desk Counter Node</label>
+        <select id="counter-select" required>
+          <option value="">-- Select Deployment Workspace --</option>
+          <option value="c1">Counter 1 (Inquiries)</option>
+          <option value="c2">Counter 2 (Cashier Terminal)</option>
+          <option value="c3">Counter 3 (Approvals & Audits)</option>
+        </select>
+
+        <label for="mfa">MFA Authenticator Token Key</label>
+        <input type="text" id="mfa" placeholder="6-Digit MFA Code Token" maxlength="6">
+        
+        <button type="submit" class="btn">Open Admin Dashboard</button>
+      </form>
+      
+      <div class="form-footer-links">
+        <a href="#">Forgot Security Key</a>
+        <a href="#">Contact Corporate IT Support</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     VIEW 4: TOKEN GENERATION MODULE INTERFACE
+     ========================================================================== -->
+  <section id="view-token-gen" class="view-section">
+    <h2>Token Generation & Allocation Framework</h2>
+    <div class="kiosk-grid">
+      
+      <!-- Staff Control/Manual Overrides Layout -->
+      <div class="card">
+        <h3>Staff Issuance & Configurations</h3>
+        <p class="section-desc">Manual registration controls for front desk deployment agents.</p>
+        
+        <label for="dept-select">Configure Category Allocation Target</label>
+        <select id="dept-select">
+          <option>Billing & Statements Logistics</option>
+          <option>General Accounts Services</option>
+          <option>Technical Escalation Desk</option>
+          <option>VIP Priority Pass Lane</option>
+        </select>
+
+        <label for="cust-tier">Customer Priority Status Rules</label>
+        <select id="cust-tier">
+          <option>Standard Walk-In Tier</option>
+          <option>Premium Business Tier</option>
+          <option class="vip-option">VIP / Urgent Processing Override</option>
+        </select>
+
+        <button class="btn" onclick="alert('Token Allocation Issued Successfully & Forwarded to Print Queue Interface Router Node.')">Generate & Print Manual Token Sticker</button>
+      </div>
+
+      <!-- Self-Service Customer Terminal UI Simulation -->
+      <div class="card kiosk-card">
+        <h3>Self-Service Interactive Kiosk</h3>
+        <p class="kiosk-subtitle">Please touch or select a service option to extract your position reference voucher</p>
+        
+        <div class="kiosk-buttons">
+          <button class="btn kiosk-btn" onclick="alert('Allocated Token: T-106. Estimated Wait: 15 mins')">💳 Deposits & Cashier Services</button>
+          <button class="btn kiosk-btn" onclick="alert('Allocated Token: A-204. Estimated Wait: 8 mins')">📁 Open New Account Registry</button>
+          <button class="btn kiosk-btn" onclick="alert('Allocated Token: S-044. Estimated Wait: 32 mins')">🛠️ Complex Loan & Consultancy Advisory</button>
+        </div>
+        <div class="kiosk-footer">
+          🎟️ Digital Tokens will automatically dispatch via requested SMS tracking codes.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     VIEW 5: LIVE TOKEN REAL-TIME STATUS DISPLAY (USER MATRIX VIEW)
+     ========================================================================== -->
+  <section id="view-realtime-user" class="view-section">
+    <div class="status-card card">
+      <div class="live-indicator">
+        <div class="pulse-dot"></div> Live Connection Sync Active
+      </div>
+      
+      <h3>Current Queue Position Profile</h3>
+      <div class="token-display">T-105</div>
+      <div class="status-pill waiting mb-15">Queue State Status: Waiting in Line</div>
+      
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill"></div>
+      </div>
+
+      <div class="stats-grid">
+        <div>
+          <p class="label">People Ahead</p>
+          <p class="value">4</p>
+        </div>
+        <div>
+          <p class="label">Est. Window Wait</p>
+          <p class="value">12 Mins</p>
+        </div>
+      </div>
+
+      <div class="alert-box-info">
+        <strong>📢 Status Notification Advisory:</strong> Please approach and prepare at <strong>Counter Workspace Node 3</strong> when your ID tag shifts status to flashing indicator rules.
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     VIEW 6: LIVE QUEUE CONTROL MONITORING SYSTEM (ADMIN COMPREHENSIVE VIEW)
+     ========================================================================== -->
+  <section id="view-realtime-admin" class="view-section">
+    <div class="dashboard-header">
+      <h2>Live Matrix Control Dashboard Node</h2>
+      <div class="live-indicator">
+        <div class="pulse-dot"></div> Production Stream Synchronized
+      </div>
+    </div>
+
+    <div class="dashboard-layout">
+      <!-- Active Workstation Control Column -->
+      <div class="card">
+        <h3>Workstation Node 3</h3>
+        <p class="section-desc">Active Operator Agent: John Doe</p>
+        
+        <div class="panel-controls">
+          <button class="btn btn-success" onclick="alert('Calling Next Ticket Registry Entry.')">🔔 Call Next Token</button>
+          <button class="btn btn-secondary" onclick="alert('Queue Processing Paused.')">⏸️ Pause Active Feed</button>
+          <button class="btn btn-secondary btn-danger-text" onclick="alert('Triggering Operator Emergency Assist Alert.')">⚠️ Request Supervisor Escort</button>
+        </div>
+
+        <div class="live-metrics-summary">
+          <strong>Live Metrics Log Summary:</strong>
+          <div class="metric-row"><span>Avg Service Run:</span><strong>5m 12s</strong></div>
+          <div class="metric-row"><span>SLA Violation Count:</span><span class="text-danger">2 Breaches</span></div>
+        </div>
+      </div>
+
+      <!-- Live Stream Data Matrix Representation Table -->
+      <div class="card">
+        <h3>Live Active Token Pipeline Streams</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Token Reference</th>
+                <th>Target Category Stream</th>
+                <th>Elapsed Waiting Time</th>
+                <th>Priority Flag</th>
+                <th>Action Operational Handlers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="urgent-row">
+                <td><strong>T-101</strong></td>
+                <td>Cash Vault Clearing Log</td>
+                <td class="text-danger-bold">22 mins (SLA Alert Threshold)</td>
+                <td><span class="status-pill danger">Critical Delay</span></td>
+                <td>
+                  <button class="btn-table-action" onclick="alert('Serving T-101')">Serve</button>
+                  <button class="btn-table-action" onclick="alert('Routing Ticket to Alternative Workspace Counter')">Route</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>T-102</strong></td>
+                <td>Corporate Account Setup</td>
+                <td>08 mins elapsed</td>
+                <td><span class="status-pill waiting">Standard</span></td>
+                <td>
+                  <button class="btn-table-action" onclick="alert('Serving T-102')">Serve</button>
+                  <button class="btn-table-action" onclick="alert('Routing Ticket to Alternative Workspace Counter')">Route</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>T-105</strong></td>
+                <td>Retail Queries Router</td>
+                <td>04 mins elapsed</td>
+                <td><span class="status-pill waiting">Standard</span></td>
+                <td>
+                  <button class="btn-table-action" onclick="alert('Serving T-105')">Serve</button>
+                  <button class="btn-table-action" onclick="alert('Routing Ticket to Alternative Workspace Counter')">Route</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     VIEW 7: DATABASE MANAGEMENT SYSTEMS LOG AND METRICS (ANALYTICS VIEW)
+     ========================================================================== -->
+  <section id="view-db-records" class="view-section">
+    <h2>Database Service Ledger Storage Records</h2>
+    
+    <!-- Unified Operations Control Filtering Unit -->
+    <div class="card">
+      <div class="filter-bar">
+        <input type="text" placeholder="Filter Token ID, Customer Phone, Staff Signature Metadata...">
+        <select>
+          <option>Display All Operational Streams</option>
+          <option>Cash Vault Operations Area</option>
+          <option>Retail & Accounts Registry</option>
+          <option>Escalation Architecture Desk</option>
+        </select>
+        <button class="btn btn-search">Search Database</button>
+        <button class="btn btn-secondary btn-export" onclick="alert('Exporting selected data files to localized Excel/CSV spreadsheets.')">📥 Export Records Ledger</button>
+      </div>
+    </div>
+
+    <!-- Master Transactional Log Matrix Framework -->
+    <div class="card">
+      <h3>System Service History Logs</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp Entry</th>
+              <th>Token Key</th>
+              <th>Operational Stream</th>
+              <th>Assigned Processor Signature</th>
+              <th>Metrics (Wait/Service Duration)</th>
+              <th>Terminal Outcome Status</th>
+              <th>System Action Node</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-05-25 14:22</td>
+              <td><strong>T-098</strong></td>
+              <td>Cashier Terminal 1</td>
+              <td>John Doe (ID-9082)</td>
+              <td>14 mins / 05 mins</td>
+              <td><span class="status-pill success">Served Successfully</span></td>
+              <td><button class="btn-table-action" onclick="alert('Extracting Audit Logs Context Tree Details.')">👁️ Audit Log</button></td>
+            </tr>
+            <tr>
+              <td>2026-05-25 13:55</td>
+              <td><strong>T-099</strong></td>
+              <td>Support Station 3</td>
+              <td>Jane Smith (ID-1102)</td>
+              <td>32 mins / --</td>
+              <td><span class="status-pill danger">No Show Flagged</span></td>
+              <td><button class="btn-table-action" onclick="alert('Extracting Audit Logs Context Tree Details.')">👁️ Audit Log</button></td>
+            </tr>
+            <tr>
+              <td>2026-05-25 12:11</td>
+              <td><strong>T-091</strong></td>
+              <td>VIP Priority Pass Lane</td>
+              <td>John Doe (ID-9082)</td>
+              <td>01 min / 12 mins</td>
+              <td><span class="status-pill success">Served Successfully</span></td>
+              <td><button class="btn-table-action" onclick="alert('Extracting Audit Logs Context Tree Details.')">👁️ Audit Log</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- User-Facing Past Timeline Layout Version Placeholder Integration -->
+      <div class="timeline">
+        <h3>Customer Personal Experience History Feed Summary (Mobile Alternate Frame)</h3>
+        <div class="timeline-item">
+          <strong>May 24, 2026 - Account Opening Registry Node</strong>
+          <p>Token ID Reference context: <strong>T-402</strong> | Status Processing State: Closed out successfully.</p>
+          <a href="#" class="timeline-link">📄 Download Official System Invoice Summary Receipt</a>
+        </div>
+        <div class="timeline-item">
+          <strong>April 11, 2026 - Currency Vault Deposits Exchange Desk</strong>
+          <p>Token ID Reference context: <strong>T-012</strong> | Status Processing State: Closed out successfully.</p>
+          <a href="#" class="timeline-link">📄 Download Official System Invoice Summary Receipt</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     3. ROUTER SIMULATION SCRIPT CONTROLLER (PURELY FOR SWITCHING VIEWS STATICALLY)
+     ========================================================================== -->
+  <script>
+    function switchView(viewId) {
+      // Hide all standard layout system frames views
+      const views = document.querySelectorAll('.view-section');
+      views.forEach(view => {
+        view.classList.remove('active-view');
+      });
+
+      // Show requested target node view section frame
+      const targetView = document.getElementById(viewId);
+      if(targetView) {
+        targetView.classList.add('active-view');
+      }
+
+      // Toggle top status bar tracking tags active metrics
+      const buttons = document.querySelectorAll('.proto-nav button');
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.getAttribute('onclick').includes(viewId)) {
+          btn.classList.add('active');
+        }
+      });
+      
+      // Auto scroll viewport directly to processing origin vector target
+      window.scrollTo(0,0);
+    }
+  </script>
+</body>
+</html>

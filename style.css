@@ -1,0 +1,483 @@
+/* ==========================================================================
+   1. GLOBAL STYLES & VARIABLES
+   ========================================================================== */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --success-text: #065f46;
+  --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+  --warning-text: #92400e;
+  --danger: #ef4444;
+  --danger-bg: #fee2e2;
+  --danger-text: #991b1b;
+  --dark: #1f2937;
+  --light: #f3f4f6;
+  --white: #ffffff;
+  --border: #e5e7eb;
+  --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  background-color: #f8fafc;
+  color: var(--dark);
+  line-height: 1.5;
+  padding-bottom: 60px;
+}
+
+/* Prototype Navigation Bar */
+.proto-nav {
+  background-color: var(--dark);
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.proto-nav button {
+  background: #374151;
+  color: var(--white);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.proto-nav button:hover, .proto-nav button.active {
+  background: var(--primary);
+}
+
+/* Container management */
+.view-section {
+  display: none;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.view-section.active-view {
+  display: block;
+}
+
+h1, h2, h3 {
+  margin-bottom: 15px;
+}
+
+/* Shared Card Styles */
+.card {
+  background: var(--white);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+/* Form Components */
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--light);
+  color: var(--dark);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-success {
+  background-color: var(--success);
+}
+
+.btn-success:hover {
+  background-color: #0d9488;
+}
+
+.btn-danger-text {
+  color: var(--danger);
+}
+
+/* Live Badge & Pulse Animation */
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--danger);
+  background: var(--danger-bg);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--danger);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.9); opacity: 0; }
+}
+
+/* Status Pills */
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.status-pill.success { background: var(--success-bg); color: var(--success-text); }
+.status-pill.waiting { background: var(--warning-bg); color: var(--warning-text); }
+.status-pill.danger { background: var(--danger-bg); color: var(--danger-text); }
+
+/* Tables */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  background-color: var(--light);
+  position: sticky;
+  top: 0;
+  padding: 12px;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+tbody tr.urgent-row {
+  background-color: #fff7ed;
+}
+
+/* Utility / Helpers */
+.mb-15 { margin-bottom: 15px; }
+.text-danger { color: var(--danger); }
+.text-danger-bold { color: var(--danger); font-weight: bold; }
+
+/* ==========================================================================
+   2. VIEW SPECIFIC LAYOUT DETAILS
+   ========================================================================== */
+
+/* View 1: Gateway Portal */
+.gateway-container {
+  max-width: 500px;
+  margin: 80px auto;
+  text-align: center;
+}
+.gateway-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* View 2 & 3: Login Views */
+.login-box {
+  max-width: 420px;
+  width: 90%;
+  margin: 60px auto;
+}
+.login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.login-header p {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+.qr-placeholder {
+  border: 2px dashed var(--border);
+  padding: 20px;
+  text-align: center;
+  border-radius: 6px;
+  background: #fafafa;
+  margin-bottom: 18px;
+  color: #6b7280;
+}
+.qr-icon {
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+.form-footer-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 0.85rem;
+}
+.form-footer-links a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* View 4: Token Generation (Kiosk Split) */
+.kiosk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+.section-desc {
+  color: #6b7280;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+.vip-option {
+  color: var(--danger);
+  font-weight: bold;
+}
+.kiosk-card {
+  background: #1e293b;
+  color: white;
+  text-align: center;
+}
+.kiosk-card h3 {
+  color: #f8fafc;
+}
+.kiosk-subtitle {
+  color: #94a3b8;
+  margin-bottom: 25px;
+}
+.kiosk-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.kiosk-btn {
+  background: #334155;
+  color: white;
+  border: none;
+}
+.kiosk-footer {
+  margin-top: 30px;
+  border-top: 1px dashed #475569;
+  padding-top: 20px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+@media (max-width: 768px) {
+  .kiosk-grid { grid-template-columns: 1fr; }
+}
+
+/* View 5: Live Progress Status View */
+.status-card {
+  max-width: 480px;
+  margin: 40px auto;
+  text-align: center;
+}
+.token-display {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 10px 0;
+  letter-spacing: -1px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin: 20px 0;
+  background: var(--light);
+  padding: 15px;
+  border-radius: 8px;
+}
+.stats-grid .label {
+  font-size: 0.85rem;
+  color: #4b5563;
+  text-transform: uppercase;
+}
+.stats-grid .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.progress-bar-container {
+  background: var(--border);
+  height: 8px;
+  border-radius: 10px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  background: var(--success);
+  width: 65%;
+  height: 100%;
+}
+.alert-box-info {
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 15px;
+  border-radius: 6px;
+  text-align: left;
+  border: 1px solid #bfdbfe;
+}
+
+/* View 6: Control Panel Dashboard */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 25px;
+}
+.panel-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.btn-table-action {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  margin-right: 4px;
+  cursor: pointer;
+}
+.live-metrics-summary {
+  margin-top: 25px;
+  background: var(--light);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+@media (max-width: 900px) {
+  .dashboard-layout { grid-template-columns: 1fr; }
+}
+
+/* View 7: System History Database Management Logs */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.filter-bar input, .filter-bar select {
+  width: auto;
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 0;
+}
+.filter-bar .btn {
+  width: auto;
+  white-space: nowrap;
+}
+.timeline {
+  margin-top: 40px;
+  border-top: 1px solid var(--border);
+  padding-top: 30px;
+}
+.timeline-item {
+  border-left: 3px solid var(--primary);
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  width: 11px;
+  height: 11px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+.timeline-item p {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+.timeline-link {
+  font-size: 0.85rem;
+  color: var(--primary);
+  text-decoration: none;
+}
