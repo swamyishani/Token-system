@@ -78,15 +78,15 @@
         <p>Enterprise Node Security Gateway</p>
       </div>
       
-      <form onsubmit="event.preventDefault(); switchView('view-realtime-admin');">
+      <form action="admin_login.php" method="POST">
         <label for="admin-email">Staff Corporate Email</label>
-        <input type="email" id="admin-email" placeholder="name@company.com" required>
+        <input type="email" name="email" id="admin-email" placeholder="name@company.com" required>
         
         <label for="admin-password">Secure Security Password</label>
-        <input type="password" id="admin-password" placeholder="••••••••" required>
+        <input type="password" name="password" id="admin-password" placeholder="••••••••" required>
         
         <label for="counter-select">Assign to Desk Counter Node</label>
-        <select id="counter-select" required>
+        <select name="counter" id="counter-select" required>
           <option value="">-- Select Deployment Workspace --</option>
           <option value="c1">Counter 1 (Inquiries)</option>
           <option value="c2">Counter 2 (Cashier Terminal)</option>
@@ -94,7 +94,7 @@
         </select>
 
         <label for="mfa">MFA Authenticator Token Key</label>
-        <input type="text" id="mfa" placeholder="6-Digit MFA Code Token" maxlength="6">
+        <input type="text" name="mfa" id="mfa" placeholder="6-Digit MFA Code Token" maxlength="6">
         
         <button type="submit" class="btn">Open Admin Dashboard</button>
       </form>
