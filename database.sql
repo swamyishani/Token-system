@@ -6,14 +6,3 @@ CREATE TABLE IF NOT EXISTS admin_accounts (
   EMAIL VARCHAR(255) PRIMARY KEY,
   PASSWORD VARCHAR(255) NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS employees (
-  name VARCHAR(255) NOT NULL,
-  token_no INT AUTO_INCREMENT PRIMARY KEY
-);
-
-INSERT IGNORE INTO admin_accounts (NAME, EMAIL, PASSWORD)
-VALUES ('Admin', 'admin@example.com', 'password123');
-
-INSERT IGNORE INTO employees (name)
-VALUES ('Alice'), ('Bob');

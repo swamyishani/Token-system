@@ -1,7 +1,4 @@
 <?php 
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 $DB_HOST = 'localhost';
 $DB_USER = 'root';
@@ -10,8 +7,7 @@ $DB_NAME = 'admin_accounts';
 
 function initialize_db($conn) {
     $queries = [
-        "CREATE TABLE IF NOT EXISTS admin_accounts (NAME VARCHAR(100) NOT NULL, EMAIL VARCHAR(255) PRIMARY KEY, PASSWORD VARCHAR(255) NOT NULL)",
-        "CREATE TABLE IF NOT EXISTS employees (name VARCHAR(255) NOT NULL, token_no INT AUTO_INCREMENT PRIMARY KEY)"
+        "CREATE TABLE IF NOT EXISTS admin_accounts (NAME VARCHAR(100) NOT NULL, EMAIL VARCHAR(255) PRIMARY KEY, PASSWORD VARCHAR(255) NOT NULL)"
     ];
     foreach ($queries as $query) {
         mysqli_query($conn, $query);
@@ -31,7 +27,7 @@ function get_db_connection() {
     if (stripos($err, 'Unknown database') !== false) {
         $adminConn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS);
         if ($adminConn) {
-            mysqli_query($adminConn, "CREATE DATABASE IF NOT EXISTS `$DB_NAME` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+            mysqli_query($adminConn, "CREATE DATABASE IF NOT EXISTS `$DB_NAME`");
             mysqli_close($adminConn);
             $conn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
             if ($conn) {
@@ -51,7 +47,7 @@ function show_count() {
     if (!$conn) {
         return 0;
     }
-    $result = mysqli_query($conn, 'SELECT COUNT(*) AS cnt FROM employees');
+    $result = mysqli_query($conn, 'SELECT COUNT(*) AS cnt FROM $counter');
     $count = 0;
     if ($result) {
         $row = mysqli_fetch_assoc($result);
@@ -68,7 +64,7 @@ function show_tokens() {
         echo "<tr><td colspan='2'>Database not available</td></tr>";
         return;
     }
-    $result = mysqli_query($conn, 'SELECT name, token_no FROM employees LIMIT 20');
+    $result = mysqli_query($conn, 'SELECT name, token_no FROM $counter ORDER BY token_no ASC');
     if (!$result) {
         echo "<tr><td colspan='2' style='color:red;'>Query error: " . htmlspecialchars(mysqli_error($conn)) . "</td></tr>";
         mysqli_close($conn);

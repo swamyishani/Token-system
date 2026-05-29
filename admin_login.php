@@ -22,9 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 function initialize_db($conn) {
     $queries = [
-        "CREATE TABLE IF NOT EXISTS admin_accounts (NAME VARCHAR(100) NOT NULL, EMAIL VARCHAR(255) PRIMARY KEY, PASSWORD VARCHAR(255) NOT NULL)",
-        "CREATE TABLE IF NOT EXISTS employees (name VARCHAR(255) NOT NULL, token_no INT AUTO_INCREMENT PRIMARY KEY)",
-        "INSERT IGNORE INTO admin_accounts (NAME, EMAIL, PASSWORD) VALUES ('Admin', 'admin@example.com', 'password123')"
+        "CREATE TABLE IF NOT EXISTS admin_accounts (NAME VARCHAR(100) NOT NULL, EMAIL VARCHAR(255) PRIMARY KEY, PASSWORD VARCHAR(255) NOT NULL)"
     ];
     foreach ($queries as $query) {
         mysqli_query($conn, $query);
@@ -43,7 +41,7 @@ function get_db_connection() {
     if (stripos($err, 'Unknown database') !== false) {
         $adminConn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS);
         if ($adminConn) {
-            mysqli_query($adminConn, "CREATE DATABASE IF NOT EXISTS `$DB_NAME` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+            mysqli_query($adminConn, "CREATE DATABASE IF NOT EXISTS `$DB_NAME`");
             mysqli_close($adminConn);
             $conn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
             if ($conn) {
@@ -81,9 +79,8 @@ function authenticate($email, $password) {
     mysqli_close($conn);
 
     if ($found && $storedPassword === $password) {
-        return true;
+    return true;
     }
-
     return false;
 }
 

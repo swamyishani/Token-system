@@ -56,7 +56,7 @@ function create_new_admin_account($name, $email, $password) {
   $stmt = mysqli_prepare($conn, 'INSERT INTO admin_accounts (NAME, EMAIL, PASSWORD) VALUES (?, ?, ?)');
   if (!$stmt) {
     mysqli_close($conn);
-    echo "<script type='text/javascript'>alert('Failed to prepare statement.')</script>";
+    echo "<script type='text/javascript'>alert('Failed to get credentials.')</script>";
     return false;
   }
 
@@ -67,6 +67,41 @@ function create_new_admin_account($name, $email, $password) {
 
   if ($success) {
     echo "<script type='text/javascript'>alert('Admin account created successfully!')</script>";
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $conn = new mysqli($servername, $username, $password);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $sql = "CREATE DATABASE `$email`";
+    if ($conn->query($sql) === TRUE) {
+        echo "Database created successfully";
+        mysqli_select_db($conn,$email);
+        $query1="CREATE TABLE IF NOT EXISTS INQUIRIES (NAME VARCHAR(100) NOT NULL, TOKEN_NO INTEGER PRIMARY KEY AUTO_INCREMENT)";
+        if ($conn->query($query1) === TRUE) {
+            echo "Table created successfully";
+        } else {
+            echo "Error creating table: " . $conn->error;
+        }
+        $query2="CREATE TABLE IF NOT EXISTS CASHIER_TERMINAL (NAME VARCHAR(100) NOT NULL, TOKEN_NO INTEGER PRIMARY KEY AUTO_INCREMENT)";
+        if ($conn->query($query2) === TRUE) {
+            echo "Table created successfully";
+        } else {
+            echo "Error creating table: " . $conn->error;
+        }
+        $query2="CREATE TABLE IF NOT EXISTS APPROVALS (NAME VARCHAR(100) NOT NULL, TOKEN_NO INTEGER PRIMARY KEY AUTO_INCREMENT)";
+        if ($conn->query($query2) === TRUE) {
+            echo "Table created successfully";
+        } else {
+            echo "Error creating table: " . $conn->error;
+        }
+    } else {
+        echo "Error creating database: " . $conn->error;
+    }
+    $conn->close();
+    header('Location: admin_page.php');
+    exit();
     return true;
   }
 
