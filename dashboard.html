@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Service Counter Dashboard</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --dark: #0f172a;
+            --success: #28a745;
+            --gray: #64748b;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f1f5f9;
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+        }
+        .dashboard-container {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h2 { margin: 0 0 5px 0; color: var(--dark); }
+        .tagline { margin: 0 0 25px 0; color: var(--gray); font-size: 14px; }
+        .setup-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
+        label { display: block; font-weight: 600; margin-bottom: 5px; color: var(--dark); font-size: 14px; }
+        select, input {
+            width: 100%; padding: 10px; margin-bottom: 12px;
+            border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;
+        }
+        .main-action-btn {
+            background: var(--primary); color: white; border: none;
+            width: 100%; padding: 18px; font-size: 18px; font-weight: bold;
+            border-radius: 8px; cursor: pointer; transition: background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,123,255,0.2);
+        }
+        .main-action-btn:hover { background: #0056b3; }
+        .status-card {
+            margin-top: 25px; padding: 20px; border-radius: 8px;
+            text-align: center; display: none;
+            border-left: 5px solid var(--success);
+            background: #f0fdf4;
+        }
+        .status-card p { margin: 0; color: var(--gray); font-size: 13px; }
+        .status-card h3 { margin: 5px 0 0 0; font-size: 36px; color: var(--dark); font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h2>Counter Console</h2>
+        <p class="tagline">Manage your assigned department lane and call waiting tokens.</p>
+
+        <div class="setup-box">
+            <label>1. Assign Counter Number</label>
+            <input type="number" id="counterNumber" value="1" min="1">
+
+            <label>2. Select Your Service Line</label>
+            <select id="serviceDept">
+                <option value="1">General Admin (D1)</option>
+                <option value="2">Billing & Cash (D2)</option>
+                <option value="3">Technical Support (D3)</option>
+                <option value="4">Enquiries (D4)</option>
+            </select>
+        </div>
+
+        <button class="main-action-btn" onclick="callNext()">🔔 Call Next Token</button>
+
+        <div class="status-card" id="statusCard">
+            <p id="cardStatusLabel">NOW SERVING AT YOUR COUNTER</p>
+            <h3 id="currentServingToken">- - -</h3>
+        </div>
+    </div>
+
+    <script>
+        async function callNext() {
+            const counterId = document.getElementById('counterNumber').value;
+            const deptId = document.getElementById('serviceDept').value;
+            const statusCard = document.getElementById('statusCard');
+            const tokenDisplay = document.getElementById('currentServingToken');
+            const labelDisplay = document.getElementById('cardStatusLabel');
+
+            if (!counterId) {
+                alert("Please assign a valid Counter ID.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:3000/api/queue/next', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assigned_counter_id: counterId, department_id: deptId })
+                });
+
+                const data = await response.json();
+                statusCard.style.display = 'block';
+
+                if (response.ok && data.token) {
+                    tokenDisplay.innerText = data.token.token_number;
+                    labelDisplay.innerText = "NOW SERVING AT COUNTER " + counterId;
+                    statusCard.style.background = "#f0fdf4";
+                    statusCard.style.borderLeftColor = "var(--success)";
+                } else {
+                    tokenDisplay.innerText = "EMPTY";
+                    labelDisplay.innerText = "QUEUE STATUS";
+                    statusCard.style.background = "#f8fafc";
+                    statusCard.style.borderLeftColor = "var(--gray)";
+                }
+            } catch (err) {
+                alert("Cannot reach backend engine. Verify server state.");
+            }
+        }
+    </script>
+</body>
+</html>

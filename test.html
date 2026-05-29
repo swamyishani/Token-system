@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Queue Complete Test Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f6f9; display: flex; flex-wrap: wrap; gap: 20px; }
+        h2 { width: 100%; color: #333; margin-bottom: 5px; }
+        .box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 400px; }
+        h3 { margin-top: 0; color: #007bff; border-bottom: 2px solid #f0f2f5; padding-bottom: 8px; }
+        input, select, button { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        .btn-queue { background: #28a745; }
+        .btn-queue:hover { background: #218838; }
+        .response { background: #222; color: #00ff00; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 13px; min-height: 40px; word-wrap: break-word; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+    <h2>⚙️ Smart Queue System Master Test Panel</h2>
+
+    <div class="box">
+        <h3>1. Register Staff Account</h3>
+        <input type="text" id="regUser" placeholder="Username / Name">
+        <input type="password" id="regPass" placeholder="Password">
+        <button onclick="handleAuth('register')">Submit Registration</button>
+        <div class="response" id="regOut">Output...</div>
+    </div>
+
+    <div class="box">
+        <h3>2. Staff Login Authentication</h3>
+        <input type="text" id="logUser" placeholder="Username / Name">
+        <input type="password" id="logPass" placeholder="Password">
+        <button onclick="handleAuth('login')">Submit Login</button>
+        <div class="response" id="logOut">Output...</div>
+    </div>
+
+    <div class="box">
+        <h3>3. Citizen Token Kiosk Sim</h3>
+        <input type="text" id="customerContact" placeholder="Phone or Email (e.g., 9876543210)">
+        <select id="deptId">
+            <option value="1">Department 1 (Token Prefix D1)</option>
+            <option value="2">Department 2 (Token Prefix D2)</option>
+            <option value="3">Department 3 (Token Prefix D3)</option>
+            <option value="4">Department 4 (Token Prefix D4)</option>
+        </select>
+        <button class="btn-queue" onclick="generateToken()">Generate Ticket Token</button>
+        <div class="response" id="tokenOut">Output...</div>
+    </div>
+
+    <div class="box">
+        <h3>4. Staff Counter (Call Next)</h3>
+        <input type="number" id="counterId" placeholder="Your Counter ID (e.g., 1)" value="1">
+        <select id="staffDeptId">
+            <option value="1">Department 1 Line</option>
+            <option value="2">Department 2 Line</option>
+            <option value="3">Department 3 Line</option>
+            <option value="4">Department 4 Line</option>
+        </select>
+        <button class="btn-queue" onclick="callNextCustomer()">🔔 Call Next Customer</button>
+        <div class="response" id="staffOut">Output...</div>
+    </div>
+
+    <script>
+        async function handleAuth(action) {
+            const isReg = action === 'register';
+            const user = document.getElementById(isReg ? 'regUser' : 'logUser').value;
+            const pass = document.getElementById(isReg ? 'regPass' : 'logPass').value;
+            const outDiv = document.getElementById(isReg ? 'regOut' : 'logOut');
+            
+            try {
+                const response = await fetch(`http://127.0.0.1:3000/api/auth/${action}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await response.json();
+                outDiv.innerText = JSON.stringify(data, null, 2);
+            } catch (err) { outDiv.innerText = "Error: " + err.message; }
+        }
+
+        async function generateToken() {
+            const contact = document.getElementById('customerContact').value;
+            const dept = document.getElementById('deptId').value;
+            const outDiv = document.getElementById('tokenOut');
+            
+            try {
+                const response = await fetch(`http://127.0.0.1:3000/api/queue/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone_or_email: contact, department_id: dept })
+                });
+                const data = await response.json();
+                outDiv.innerText = JSON.stringify(data, null, 2);
+            } catch (err) { outDiv.innerText = "Error: " + err.message; }
+        }
+
+        async function callNextCustomer() {
+            const counter = document.getElementById('counterId').value;
+            const dept = document.getElementById('staffDeptId').value;
+            const outDiv = document.getElementById('staffOut');
+            
+            try {
+                const response = await fetch(`http://127.0.0.1:3000/api/queue/next`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assigned_counter_id: counter, department_id: dept })
+                });
+                const data = await response.json();
+                outDiv.innerText = JSON.stringify(data, null, 2);
+            } catch (err) { outDiv.innerText = "Error: " + err.message; }
+        }
+    </script>
+</body>
+</html>

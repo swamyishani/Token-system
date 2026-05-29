@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Self-Service Token Kiosk</title>
+    <style>
+        :root { --primary: #007bff; --success: #28a745; --dark: #1e293b; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .kiosk-container { background: white; width: 100%; max-width: 600px; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; }
+        .logo-area { font-size: 50px; margin-bottom: 10px; }
+        h1 { color: var(--dark); margin: 0 0 10px 0; font-size: 28px; }
+        .subtitle { color: #64748b; margin: 0 0 30px 0; font-size: 16px; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        input[type="text"] { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .dept-btn { background: #f1f5f9; border: 2px solid #e2e8f0; padding: 20px; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .dept-btn:hover { border-color: var(--primary); background: #eff6ff; transform: translateY(-2px); }
+        .dept-btn h4 { margin: 0 0 5px 0; color: var(--dark); font-size: 16px; }
+        .dept-btn span { font-size: 12px; color: #64748b; }
+        .ticket-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; }
+        .ticket { background: white; padding: 30px; border-radius: 4px; width: 320px; font-family: 'Courier New', monospace; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border-top: 8px dashed var(--success); text-align: center; }
+        .ticket h2 { margin: 10px 0; font-size: 42px; color: var(--dark); }
+        .ticket-footer { border-top: 1px dashed #ccc; margin-top: 15px; padding-top: 15px; font-size: 12px; color: #555; }
+        .close-btn { margin-top: 15px; background: var(--dark); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div class="kiosk-container">
+        <div class="logo-area">🏢</div>
+        <h1>Welcome to Smart Queue</h1>
+        <p class="subtitle">Please fill details and select a department to join the queue line.</p>
+
+        <div class="form-group">
+            <label for="nameInput">Your Full Name</label>
+            <input type="text" id="nameInput" placeholder="e.g., John Doe">
+        </div>
+
+        <div class="form-group">
+            <label for="phoneInput">Mobile Number or Email Address</label>
+            <input type="text" id="phoneInput" placeholder="e.g., +91 98765 43210" required>
+        </div>
+
+        <label style="text-align: left; display: block;">Select Service Department</label>
+        <div class="grid-buttons">
+            <div class="dept-btn" onclick="issueTicket(1, 'General Admin')"><h4>General Admin</h4><span>Prefix: D1</span></div>
+            <div class="dept-btn" onclick="issueTicket(2, 'Billing & Cash')"><h4>Billing & Cash</h4><span>Prefix: D2</span></div>
+            <div class="dept-btn" onclick="issueTicket(3, 'Technical Support')"><h4>Technical Support</h4><span>Prefix: D3</span></div>
+            <div class="dept-btn" onclick="issueTicket(4, 'Enquiries')"><h4>Enquiries</h4><span>Prefix: D4</span></div>
+        </div>
+    </div>
+
+    <div class="ticket-modal" id="ticketModal">
+        <div class="ticket">
+            <p style="margin: 0; font-weight: bold; letter-spacing: 2px;">SMART QUEUE SYSTEM</p>
+            <p id="ticketDept" style="margin: 5px 0; font-size: 14px; color: #666;">DEPARTMENT</p>
+            <hr style="border: none; border-top: 1px dashed #ccc;">
+            <p style="font-size: 12px; margin: 10px 0 0 0;">YOUR TOKEN NUMBER</p>
+            <h2 id="ticketNumber">D1-101</h2>
+            <p id="ticketUser" style="font-size: 14px; margin: 5px 0; font-weight: bold;"></p>
+            <p style="font-size: 11px; color: #777;" id="ticketTime"></p>
+            <div class="ticket-footer">
+                <p>Please watch the central waiting display screen. Your token will be called shortly.</p>
+                <button class="close-btn" onclick="closeModal()">Done / Print</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function issueTicket(deptId, deptName) {
+            const nameVal = document.getElementById('nameInput').value.trim();
+            const contactVal = document.getElementById('phoneInput').value.trim();
+            
+            if(!contactVal) {
+                alert("⚠️ Please enter your mobile number or email address first.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:3000/api/queue/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customer_name: nameVal, phone_or_email: contactVal, department_id: deptId })
+                });
+
+                const data = await response.json();
+
+                if(response.ok) {
+                    document.getElementById('ticketDept').innerText = deptName.toUpperCase();
+                    document.getElementById('ticketNumber').innerText = data.token_number;
+                    document.getElementById('ticketUser').innerText = nameVal ? "Name: " + nameVal : "";
+                    document.getElementById('ticketTime').innerText = "Issued: " + new Date().toLocaleTimeString();
+                    document.getElementById('ticketModal').style.display = 'flex';
+                } else {
+                    alert("Error: " + (data.error || "Could not generate token"));
+                }
+            } catch (err) {
+                alert("Backend Connection Lost. Ensure your server is running node server.js");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('ticketModal').style.display = 'none';
+            document.getElementById('nameInput').value = '';
+            document.getElementById('phoneInput').value = '';
+        }
+    </script>
+</body>
+</html>

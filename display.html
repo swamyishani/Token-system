@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Queue Monitor Display</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f172a; color: white; margin: 0; padding: 30px;
+            display: flex; flex-direction: column; height: 100vh; box-sizing: border-box;
+        }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 3px solid #1e293b; padding-bottom: 15px; margin-bottom: 30px;
+        }
+        h1 { margin: 0; font-size: 32px; color: #38bdf8; }
+        .clock { font-size: 24px; font-family: monospace; color: #94a3b8; }
+        .grid-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex: 1;
+        }
+        .main-display {
+            background: #1e293b; border-radius: 16px; padding: 40px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #38bdf8;
+        }
+        .main-display p { margin: 0; font-size: 20px; color: #cbd5e1; letter-spacing: 2px; }
+        .main-display h2 { margin: 10px 0; font-size: 96px; color: #f59e0b; font-family: monospace; }
+        .main-display .counter-badge { background: #38bdf8; color: #0f172a; padding: 10px 30px; font-size: 28px; font-weight: bold; border-radius: 8px; }
+        
+        .history-panel { background: #111827; border-radius: 16px; padding: 25px; display: flex; flex-direction: column; }
+        .history-panel h3 { margin: 0 0 15px 0; font-size: 22px; border-bottom: 2px solid #1e293b; padding-bottom: 10px; color: #94a3b8; }
+        .row-item {
+            display: flex; justify-content: space-between; background: #1e293b;
+            padding: 15px 25px; margin-bottom: 10px; border-radius: 8px; font-size: 24px; font-weight: bold;
+        }
+        .row-item span.token-num { color: #10b981; font-family: monospace; }
+        .row-item span.counter-num { color: #cbd5e1; }
+        .empty-msg { text-align: center; color: #4b5563; margin-top: 50px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏢 Smart Central Queue Display</h1>
+        <div class="clock" id="liveClock">00:00:00 PM</div>
+    </header>
+
+    <div class="grid-container">
+        <div class="main-display">
+            <p>NOW SERVING</p>
+            <h2 id="bigToken">- - -</h2>
+            <div class="counter-badge" id="bigCounter">Counter --</div>
+        </div>
+
+        <div class="history-panel">
+            <h3>Recent Calls</h3>
+            <div id="historyList">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // Live Header Clock Logic
+        setInterval(() => {
+            document.getElementById('liveClock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        // Fetch Live Database Data every 3 seconds
+        async function fetchLiveQueue() {
+            try {
+                const response = await fetch('http://127.0.0.1:3000/api/queue/serving');
+                const data = await response.json();
+
+                const bigToken = document.getElementById('bigToken');
+                const bigCounter = document.getElementById('bigCounter');
+                const historyList = document.getElementById('historyList');
+
+                if (data && data.length > 0) {
+                    // 1. Update the big highlighted card with the freshest token
+                    bigToken.innerText = data[0].token_number;
+                    bigCounter.innerText = "COUNTER " + data[0].assigned_counter_id;
+
+                    // 2. Build out the rest of the list rows dynamically
+                    historyList.innerHTML = '';
+                    data.forEach((item, index) => {
+                        historyList.innerHTML += `
+                            <div class="row-item" style="opacity: ${index === 0 ? '1' : '0.6'}">
+                                <span class="token-num">${item.token_number}</span>
+                                <span class="counter-num">Counter ${item.assigned_counter_id}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    bigToken.innerText = "STDBY";
+                    bigCounter.innerText = "Counter --";
+                    historyList.innerHTML = '<div class="empty-msg">No active tokens being served currently.</div>';
+                }
+            } catch (err) {
+                console.log("Waiting for backend connection...");
+            }
+        }
+
+        // Run immediately and poll every 3 seconds
+        fetchLiveQueue();
+        setInterval(fetchLiveQueue, 3000);
+    </script>
+</body>
+</html>
